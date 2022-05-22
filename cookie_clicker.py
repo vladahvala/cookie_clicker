@@ -10,19 +10,28 @@ def get_scores(scores):
     except ValueError:
         return 0
 
+def  click_cursor(browser, scores):
+    """Click the first product"""
+    try:
+        price = int(browser.find_element(By.ID, "productPrice").text)
+    except ValueError:
+        price=0
+    if price and price<=get_scores(scores):   
+        prod0 = browser.find_element(By.ID, "product0")
+        prod0.click()
+
 def main():
-    browser = webdriver.Chrome() 
+    browser = webdriver.Chrome()
     browser.get("https://orteil.dashnet.org/cookieclicker/")
-    cookie = browser.find_element(By.ID, "bigCookie")
-    #upgrades = browser.find_element(By.CLASS_NAME, "upgrade")
-    #upgrade = browser.find_element(By.ID, "upgrade0")
+    cookie = browser.find_element(By.ID, "bigCookie") 
     scores = browser.find_element(By.ID, "cookies")
     while True:
         cookie.click()
         time.sleep(0.1)
         num = get_scores(scores)
-        upgrades = browser.find_element(By.CLASS_NAME, "upgrade")
-        if num > 100 and len(upgrades)>0:
+        click_cursor(browser, scores)
+        upgrades = browser.find_elements(By.CLASS_NAME, "upgrade")
+        if num > 100 and len(upgrades)>1:
             upgrades[0].click()
             print("upgraded!!!")
 
